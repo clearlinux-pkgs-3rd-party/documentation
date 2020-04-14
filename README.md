@@ -1,123 +1,156 @@
-# Available Packages
 
-* FFmpeg
 
-* Flameshot
-
-* Google Chrome Stable
-
-* iio-sensor-proxy
-
-* Skype
-
-* Teams
-
-* VSCode
-
-* Zoom
-
-# Installation
+# Adding the repo
 
 In order to use the repository, we first have to enable it with:
 
 ```
-
-sudo swupd 3rd-party add <repo-name> https://clear.greginator.xyz/
-
+sudo swupd 3rd-party add greginator https://clear.greginator.xyz/
 ```
 
-where \<repo-name> can be anything, it is the name that will be used for the repository on your own machine and it will mean that all content of the repository will be placed under /opt/3rd-party/bundles/\<repo-name>
+do not change the name greginator to anything else, it is the name that will be used for the repository on your own machine and it will mean that all content of the repository will be placed under /opt/3rd-party/bundles/greginator. This is needed for some .desktop files as they are hardcoded to this path
 
 In order to list all available bundles from 3rd-party repos:
 
 ```
-
 sudo swupd 3rd-party bundle-list -a
-
 ```
 
-To update the 3rd-party repos:
+# Available Packages
+
+* FFmpeg
+
+  ```
+  sudo swupd 3rd-party bundle-add ffmpeg
+  ```
+
+* Flameshot
+
+  ```
+  sudo swupd 3rd-party bundle-add flameshot
+  ```
+
+* Google Chrome Stable
+
+  ```
+  sudo swupd 3rd-party bundle-add google-chrome-stable
+  ```
+
+* Skype
+
+  ```
+  sudo swupd 3rd-party bundle-add skypeforlinux
+  ```
+
+* Teams
+
+  ```
+  sudo swupd 3rd-party bundle-add teams
+  ```
+
+* Visual Studio Code
+
+  ```
+  sudo swupd 3rd-party bundle-add code
+  ```
+
+* Zoom
+
+  ```
+  sudo swupd 3rd-party bundle-add zoom
+  ```
+
+* Transmission
+
+  ```
+  sudo swupd 3rd-party bundle-add transmission
+  ```
+
+# Important information
+
+## Updating from a version before 14-04-2020
+Since I messed up my installation and had to remove the mixer folder I now have new private keys for the repository, this means that you have to remove and add the repository again. (Note that in the first command you should replace greginator with the name you gave the repository on your device).
 
 ```
-
-sudo swupd 3rd-party update
-
+sudo swupd 3rd-party remove greginator
+sudo swupd 3rd-party add greginator https://clear.greginator.xyz/
 ```
 
-In order to install the actual packages (note this will install all the packages, you can choose to only select a few)
+Now reinstall all the software that you want, your config files will still work so you don't have to reconfigure things like VS Code.
+
+## Fixes for some issues still existing with swupd 3rd-party:
+
+### .desktop files
+
+Currently swupd 3rd-party doesn't export .desktop files, I have patched them manually to use the /opt/3rd-party path but you still have to copy them to your applications folder.
 
 ```
-
-sudo swupd 3rd-party bundle-add ffmpeg flameshot google-chrome-stable iio-sensor-proxy skype teams vscode zoom
-
+cp -R /opt/3rd-party/bundles/greginator/usr/share/applications/* $HOME/.local/share/applications
 ```
 
-## Some fixes:
 
-Making the software available through a desktop environment:
+### VS Code filesystem watches
 
-```
-
-cp -R /opt/3rd-party/bundles/<repo-name>/usr/share/applications $HOME/.local/share/applications
+We need to allow VS Code to watch larger filesystems for changes, the default is too small
 
 ```
-
-Make iio-sensor-proxy autostart
-
-```
-
-sudo cp -R /opt/3rd-party/bundles/<repo-name>/usr/lib/udev /etc
-
-sudo cp -R /opt/3rd-party/bundles/<repo-name>/usr/lib/systemd /etc
-
-```
-
-Allow for large directory tracking in VS Code
-
-```
-
 sudo mkdir -p /etc/sysctl.d
-
 echo fs.inotify.max_user_watches=524288 | sudo tee /etc/sysctl.d/40-max-user-watches.conf && sudo sysctl --system
-
 ```
 
-Adding the codecs to the path (note this doesn't seem to be enough for firefox and vlc)
+### Codecs
+
+We need to add out codecs to the LD_LIBRARY_PATH, for this a few different things need to be done due to incompatibility between the configs for wayland, x11 and some quirck in firefox.
+
+#### LD
 
 ```
-
-sudo sh -c 'echo /opt/3rd-party/bundles/<repo-name>/usr/lib >>/etc/ld.so.conf'
-
+sudo sh -c 'echo /opt/3rd-party/bundles/greginator/usr/lib64 >>/etc/ld.so.conf'
 sudo ldconfig
-
 ```
 
-To fix firefox and vlc (only for bash shell not for zsh, still working on a fix for that) add to /etc/environment
+#### x11
 
 ```
-
-if [[ $UID -ge 1000 && -d /opt/3rd-party/bundles/<repo-name>/usr/lib && -z $(echo $LD_LIBRARY_PATH | grep -o /opt/3rd-party/bundles/<repo-name>/usr/lib) ]]
-
+sudo tee -a /etc/profile << EOF
+if [[ $UID -ge 1000 && -d /opt/3rd-party/bundles/greginator/usr/lib64 && -z $(echo $LD_LIBRARY_PATH | grep -o /opt/3rd-party/bundles/greginator/usr/lib64) ]]
 then
-
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/opt/3rd-party/bundles/<repo-name>/usr/lib"
-
+    export LD_LIBRARY_PATH="/opt/3rd-party/bundles/greginator/usr/lib64:${LD_LIBRARY_PATH}"
 fi
-
+EOF
+```
+#### Wayland
+```
+sudo mkdir -p /etc/environment.d/
+echo LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64 | sudo tee /etc/environment.d/10-codecs.conf
 ```
 
-The current workaround for zsh is a bit cumbersome but the following is needed for firefox:
+#### Firefox
 
 ```
-
-echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/<repo-name>/usr/lib" >> ${HOME}/.config/firefox.conf
-
+echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64" >> ${HOME}/.config/firefox.conf
 ```
 
-and for vlc just run
+# Extra packages (manual installation)
+
+#### QTStyleplugins
+
+The QTSyleplugins package provides some files for QT5 in order to be able to theme bettter, most importantly it includes the ability for QT to use the GTK2 theme making it possible to have a uniform look for QT applications in GNOME.
 
 ```
-
-LD_LIBRARY_PATH=/opt/3rd-party/bundles/<repo-name>/usr/lib vlc
-
+sudo swupd bundle-add qt5ct
+wget https://github.com/clearlinux-pkgs-3rd-party/qtstyleplugins/releases/download/v1.0/qtstyleplugins-lib-1-2.x86_64.rpm -O qtstyleplugins-lib-1-2.x86_64.rpm
+rpm2cpio qtstyleplugins-lib-1-2.x86_64.rpm | (cd /; sudo cpio -i -d -u 2> /dev/null);
+echo QT_QPA_PLATFORMTHEME=qt5ct | sudo tee /etc/environment.d/20-QT.conf
 ```
+
+Now open qt5ct and set the style to gtk2, standard dialogs to GTK2, while you're at it you might want to change the icon theme and fonts as well.
+
+
+# Changelog
+
+* 14-04-2020
+  * Removed iio-sensor-proxy since it is available in the official repositories
+  * Added transmission (gtk version)
+  * Updated chrome, vscode, skype, teams and flameshot
+  * QTStyleplugins is available for manual installation
