@@ -113,9 +113,9 @@ sudo ldconfig
 
 ```
 sudo tee -a /etc/profile << EOF
-if [[ $UID -ge 1000 && -d /opt/3rd-party/bundles/greginator/usr/lib64 && -z $(echo $LD_LIBRARY_PATH | grep -o /opt/3rd-party/bundles/greginator/usr/lib64) ]]
+if [[ \$UID -ge 1000 && -d /opt/3rd-party/bundles/greginator/usr/lib64 && -z \$(echo \$LD_LIBRARY_PATH | grep -o /opt/3rd-party/bundles/greginator/usr/lib64) ]]
 then
-    export LD_LIBRARY_PATH="/opt/3rd-party/bundles/greginator/usr/lib64:${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="/opt/3rd-party/bundles/greginator/usr/lib64:\${LD_LIBRARY_PATH}"
 fi
 EOF
 ```
