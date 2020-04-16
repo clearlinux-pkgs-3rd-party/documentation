@@ -105,7 +105,7 @@ We need to add out codecs to the LD_LIBRARY_PATH, for this a few different thing
 #### LD
 
 ```
-sudo sh -c 'echo /opt/3rd-party/bundles/greginator/usr/lib64 >>/etc/ld.so.conf'
+sudo sh -c 'echo /opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32 >>/etc/ld.so.conf'
 sudo ldconfig
 ```
 
@@ -115,20 +115,20 @@ sudo ldconfig
 sudo tee -a /etc/profile << EOF
 if [[ \$UID -ge 1000 && -d /opt/3rd-party/bundles/greginator/usr/lib64 && -z \$(echo \$LD_LIBRARY_PATH | grep -o /opt/3rd-party/bundles/greginator/usr/lib64) ]]
 then
-    export LD_LIBRARY_PATH="/opt/3rd-party/bundles/greginator/usr/lib64:\${LD_LIBRARY_PATH}"
+    export LD_LIBRARY_PATH="/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32:\${LD_LIBRARY_PATH}"
 fi
 EOF
 ```
 #### Wayland
 ```
 sudo mkdir -p /etc/environment.d/
-echo LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64 | sudo tee /etc/environment.d/10-codecs.conf
+echo LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32 | sudo tee /etc/environment.d/10-codecs.conf
 ```
 
 #### Firefox
 
 ```
-echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64" >> ${HOME}/.config/firefox.conf
+echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32" >> ${HOME}/.config/firefox.conf
 ```
 
 # Extra packages (manual installation)
