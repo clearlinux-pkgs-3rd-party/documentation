@@ -2,9 +2,10 @@
 1. [Adding the repo](#setup)
 2. [Available Packages](#packages)
 3. [Important information](#important)
-4. [Fixes for some issues still existing with swupd 3rd-party](#fixes)
-5. [Extra packages (manual installation)](#extras)
-6. [Changelog](#changelog)
+    1. [Updating from a version before 17-04-2020](#breaking-update)
+    2. [Fixes for some issues still existing with swupd 3rd-party](#fixes)
+4. [Extra packages (manual installation)](#extras)
+5. [Changelog](#changelog)
 
 # Adding the repo<a name="setup"></a>
 
@@ -74,7 +75,7 @@ sudo swupd 3rd-party bundle-list -a
 
 # Important information<a name="important"></a>
 
-## Updating from a version before 17-04-2020
+## Updating from a version before 17-04-2020<a name="breaking-update"></a>
 Since I messed up my installation and had to remove the mixer folder I now have new private keys for the repository, this means that you have to remove and add the repository again. (Note that in the first command you should replace greginator with the name you gave the repository on your device).
 
 ```
