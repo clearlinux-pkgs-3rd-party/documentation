@@ -68,7 +68,7 @@ sudo swupd 3rd-party bundle-list -a
 
 # Important information
 
-## Updating from a version before 14-04-2020
+## Updating from a version before 17-04-2020
 Since I messed up my installation and had to remove the mixer folder I now have new private keys for the repository, this means that you have to remove and add the repository again. (Note that in the first command you should replace greginator with the name you gave the repository on your device).
 
 ```
@@ -105,7 +105,10 @@ We need to add out codecs to the LD_LIBRARY_PATH, for this a few different thing
 #### LD
 
 ```
-sudo sh -c 'echo /opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32 >>/etc/ld.so.conf'
+sudo tee -a /etc/ld.so.conf << EOF
+/opt/3rd-party/bundles/greginator/usr/lib64
+/opt/3rd-party/bundles/greginator/usr/lib32
+EOF
 sudo ldconfig
 ```
 
@@ -119,7 +122,9 @@ then
 fi
 EOF
 ```
+
 #### Wayland
+
 ```
 sudo mkdir -p /etc/environment.d/
 echo LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32 | sudo tee /etc/environment.d/10-codecs.conf
@@ -138,7 +143,7 @@ echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3r
 The QTSyleplugins package provides some files for QT5 in order to be able to theme bettter, most importantly it includes the ability for QT to use the GTK2 theme making it possible to have a uniform look for QT applications in GNOME.
 
 ```
-sudo swupd bundle-add qt5ct
+sudo swupd bundle-add wget os-clr-on-clr qt5ct
 wget https://github.com/clearlinux-pkgs-3rd-party/qtstyleplugins/releases/download/v1.0/qtstyleplugins-lib-1-2.x86_64.rpm -O qtstyleplugins-lib-1-2.x86_64.rpm
 rpm2cpio qtstyleplugins-lib-1-2.x86_64.rpm | (cd /; sudo cpio -i -d -u 2> /dev/null);
 echo QT_QPA_PLATFORMTHEME=qt5ct | sudo tee /etc/environment.d/20-QT.conf
@@ -149,7 +154,7 @@ Now open qt5ct and set the style to gtk2, standard dialogs to GTK2, while you're
 
 # Changelog
 
-* 14-04-2020
+* 17-04-2020
   * Removed iio-sensor-proxy since it is available in the official repositories
   * Added transmission (gtk version)
   * Updated chrome, vscode, skype, teams and flameshot
