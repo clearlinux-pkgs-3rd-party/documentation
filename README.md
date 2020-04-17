@@ -1,6 +1,12 @@
+# Table of contents
+1. [Adding the repo](#setup)
+2. [Available Packages](#packages)
+3. [Important information](#important)
+4. [Fixes for some issues still existing with swupd 3rd-party](#fixes)
+5. [Extra packages (manual installation)](#extras)
+6. [Changelog](#changelog)
 
-
-# Adding the repo
+# Adding the repo<a name="setup"></a>
 
 In order to use the repository, we first have to enable it with:
 
@@ -16,7 +22,7 @@ In order to list all available bundles from 3rd-party repos:
 sudo swupd 3rd-party bundle-list -a
 ```
 
-# Available Packages
+# Available Packages<a name="packages"></a>
 
 * FFmpeg
 
@@ -66,7 +72,7 @@ sudo swupd 3rd-party bundle-list -a
   sudo swupd 3rd-party bundle-add transmission
   ```
 
-# Important information
+# Important information<a name="important"></a>
 
 ## Updating from a version before 17-04-2020
 Since I messed up my installation and had to remove the mixer folder I now have new private keys for the repository, this means that you have to remove and add the repository again. (Note that in the first command you should replace greginator with the name you gave the repository on your device).
@@ -78,7 +84,7 @@ sudo swupd 3rd-party add greginator https://clear.greginator.xyz/
 
 Now reinstall all the software that you want, your config files will still work so you don't have to reconfigure things like VS Code.
 
-## Fixes for some issues still existing with swupd 3rd-party:
+## Fixes for some issues still existing with swupd 3rd-party:<a name="fixes"></a>
 
 ### .desktop files
 
@@ -136,7 +142,7 @@ echo LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/
 echo "export LD_LIBRARY_PATH=/opt/3rd-party/bundles/greginator/usr/lib64:/opt/3rd-party/bundles/greginator/usr/lib32" >> ${HOME}/.config/firefox.conf
 ```
 
-# Extra packages (manual installation)
+# Extra packages (manual installation)<a name="extras"></a>
 
 #### QTStyleplugins
 
@@ -152,7 +158,7 @@ echo QT_QPA_PLATFORMTHEME=qt5ct | sudo tee /etc/environment.d/20-QT.conf
 Now open qt5ct and set the style to gtk2, standard dialogs to GTK2, while you're at it you might want to change the icon theme and fonts as well.
 
 
-# Changelog
+# Changelog<a name="changelog"></a>
 
 * 17-04-2020
   * Removed iio-sensor-proxy since it is available in the official repositories
