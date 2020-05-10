@@ -166,6 +166,7 @@ Now open qt5ct and set the style to gtk2, standard dialogs to GTK2, while you're
   * Added megasync (still hacky and not source built)
   * Updated chrome, vscode, skype, teams and zoom
   * Added libsnappy to ffmpeg-libs
+  * Added gst-libav to ffmpeg-libs
   * Added platform-tools (adb & fastboot and such)
   * Added repo (for downloading android source code)
 
