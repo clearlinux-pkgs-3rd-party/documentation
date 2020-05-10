@@ -161,6 +161,14 @@ Now open qt5ct and set the style to gtk2, standard dialogs to GTK2, while you're
 
 # Changelog<a name="changelog"></a>
 
+* 10-05-2020
+  * Removed transmission (it kept crashing when encryption was enabled due to using the unsupported and unsecure rc4), use qBittorrent instead
+  * Added megasync (still hacky and not source built)
+  * Updated chrome, vscode, skype, teams and zoom
+  * Added libsnappy to ffmpeg-libs
+  * Added platform-tools (adb & fastboot and such)
+  * Added repo (for downloading android source code)
+
 * 17-04-2020
   * Removed iio-sensor-proxy since it is available in the official repositories
   * Added transmission (gtk version)
